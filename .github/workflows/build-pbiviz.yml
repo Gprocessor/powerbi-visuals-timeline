@@ -1,0 +1,36 @@
+name: Build Power BI Timeline Visual
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install pbiviz CLI globally
+        run: npm install -g powerbi-visuals-tools
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Power BI Visual
+        run: pbiviz package
+
+      - name: Upload pbiviz artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: timeline-slicer.pbiviz
+          path: dist/*.pbiviz
